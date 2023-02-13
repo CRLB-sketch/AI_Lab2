@@ -10,37 +10,41 @@ librería de redes bayesianas e interferencia probabilística.
 ######################################################################################
 
 class BayesianNetwork():
-    def __init__(self) -> None:        
+        
+    def __init__(self) -> None:         
         self.nodes = {}
     
-    def insert_node(self, node : str) -> None:        
-        if node is not self.nodes:
-            self.nodes[node] = []
-    
-    def insert_connection(self, node : str, node_to_connect = str) -> int:
-        if node not in self.nodes:
-            return -1
-        
-        if node_to_connect not in self.nodes:
-            return 0
-        
-        self.nodes[node].append(node_to_connect)
-        return 1
-        
+    def add_nodes(self, all_nodes) -> None:
+        for edge_1, edge_2 in all_nodes:
+            if edge_1 not in self.nodes: self.nodes[edge_1] = []
+            if edge_2 not in self.nodes: self.nodes[edge_2] = []
+            self.nodes[edge_1].append(edge_2)
+            
+        nodes_count = {}
+        for key, value in self.nodes.items():
+            nodes_count[key] = 0
+                                    
+        for key, value in self.nodes.items():
+            for v in value:
+                nodes_count[v] += 1
+                        
     def add_probs(self, probs : list) -> None:
         ...
         
-    def show_nodes(self) -> str:
+    def show_bayesian_network(self) -> str:
         info_nodes = ''
         for key, value in self.nodes.items():
             info_nodes += f'{key} --> {value}\n'
         return info_nodes
-        
-    def show_bayesian_network(self) -> str:
-        ...
-        
+                
     def show_bayesian_network_and_probs(self) -> str:
+        info_nodes = ''        
+            
+        return info_nodes
+        
+    def inference_by_enumeration(self, query : str, e_variables : str, bn : object) -> float:
         ...
         
-    def query_prob(self, query : str) -> str:
-        ...
+    def bayesian_network_complete(self) -> bool:
+        return True
+    
