@@ -9,8 +9,6 @@ librería de redes bayesianas e interferencia probabilística.
 """
 ######################################################################################
 
-import itertools
-
 class BayesianNetwork():
                 
     def __init__(self) -> None:         
@@ -18,7 +16,6 @@ class BayesianNetwork():
         self.probs = {}
     
     def add_nodes(self, all_nodes) -> None:
-        temp_nodes = {}
         for edge_1, edge_2 in all_nodes:
             if edge_1 not in self.nodes: self.nodes[edge_1] = []
             if edge_2 not in self.nodes: self.nodes[edge_2] = []
@@ -33,13 +30,35 @@ class BayesianNetwork():
             for v in value:
                 nodes_count[v] += 1
 
-        print('----------------------')
+        # We are going to test something
+        prepare_for_probs = {}
         for key, value in self.nodes.items():
-            print(f'{key} & {value} & {nodes_count[key]}')
-        print('----------------------')
+            for v in value:
+                if v not in prepare_for_probs:
+                    prepare_for_probs[v] = [key]
+                else:
+                    prepare_for_probs[v].append(key)
+            
+        for key, value in self.nodes.items():
+            if key not in  prepare_for_probs:
+                prepare_for_probs[key] = []
+    
+        for key, value in prepare_for_probs.items():
+            temp = [None for _ in range(2 ** len(value)) ]
+            if key not in self.probs:
+                self.probs[(key, True)] = temp
+                self.probs[(key, False)] = temp
 
-    def add_probs(self, probs : list) -> None:
-        ...
+    def add_probs(self, node: str, probs : list) -> None:        
+        if((node, True) not in self.probs):
+            print("\033[1;31;40mERROR: El nodo ingresado no existe la red bayesiana\033[0;37;40m \n")
+            return
+        
+        if len(probs) != len(self.probs[(node, True)]):
+            print("\033[1;31;40mERROR: El tamanio de las listas no coinciden\033[0;37;40m \n")
+            return
+            
+        self.probs[(node, True)] = probs
         
     def show_bayesian_network(self) -> str:
         info_nodes = ''
@@ -47,42 +66,22 @@ class BayesianNetwork():
             info_nodes += f'{key} --> {value}\n'
         return info_nodes
                 
-    def show_bayesian_network_and_probs(self) -> str:
-        info_nodes = ''
-
-        # We are going to test something
-        testing = {}
-        for key, value in self.nodes.items():
-            for v in value:
-                print(f'P({v} | {key})')
-                if v not in testing:
-                    testing[v] = [key]
-                else:
-                    testing[v].append(key)
+    def show_bayesian_network_and_probs(self) -> str:        
+        information = []        
+        for i in self.probs.items():
+            prob, array_probs = i
+            if prob[1] == True:
+                information.append(f'PROB: {prob} | VALUES: {array_probs}')                
+        return '\n'.join(map(str, information))
             
-        for key, value in self.nodes.items():
-            if key not in  testing:
-                testing[key] = []
-    
-        print(testing)
-
-        set_probs = {}
-        for key, value in testing.items():
-            n = 2 ** len(value)
-            print(f'{key} and {value} # {n} and {len(value)}')
-            table = list(itertools.product([True, False], repeat=len(value)))
-            print(table)
-        
-        return info_nodes
-        
     def inference_by_enumeration(self, **conditions) -> float:
-        print('+++++++++++++++++++++++++')
-        for i, j in conditions.items():
-            print(f'{i} and {j}')
-        print('+++++++++++++++++++++++++')
-        
-        return
+        return 0.0
         
     def bayesian_network_complete(self) -> bool:
+        for i in self.probs.items():
+            prob, array_probs = i
+            if prob[1] == True:
+                for p in array_probs:
+                    if p == None: return False
         return True
     
