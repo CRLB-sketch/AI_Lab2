@@ -9,6 +9,8 @@ librería de redes bayesianas e interferencia probabilística.
 """
 ######################################################################################
 
+import itertools
+
 class BayesianNetwork():
                 
     def __init__(self) -> None:         
@@ -35,8 +37,6 @@ class BayesianNetwork():
         for key, value in self.nodes.items():
             print(f'{key} & {value} & {nodes_count[key]}')
         print('----------------------')
-
-        
 
     def add_probs(self, probs : list) -> None:
         ...
@@ -66,19 +66,22 @@ class BayesianNetwork():
     
         print(testing)
 
-        # We are going to show all probs of each
+        set_probs = {}
         for key, value in testing.items():
-            amount_probs = 2 ** len(value)
-            if(amount_probs <= 1):
-                print(f'P({key}) # {(2 ** len(value))}')
-            else:
-                print(f'P({key} | {", ".join(map(str, value))}) # {(2 ** len(value))}')
+            n = 2 ** len(value)
+            print(f'{key} and {value} # {n} and {len(value)}')
+            table = list(itertools.product([True, False], repeat=len(value)))
+            print(table)
         
-
         return info_nodes
         
-    def inference_by_enumeration(self, query : str, e_variables : str, bn : object) -> float:
-        ...
+    def inference_by_enumeration(self, **conditions) -> float:
+        print('+++++++++++++++++++++++++')
+        for i, j in conditions.items():
+            print(f'{i} and {j}')
+        print('+++++++++++++++++++++++++')
+        
+        return
         
     def bayesian_network_complete(self) -> bool:
         return True

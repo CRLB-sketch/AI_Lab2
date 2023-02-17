@@ -26,6 +26,9 @@ if __name__ == "__main__":
     print(nodes)    
     bs_and_probs = bn.show_bayesian_network_and_probs()
     print(bs_and_probs)
+
+    result_enumeration = bn.inference_by_enumeration(B=False, E=False)
+    
     # -----------------------------------------------------------------------
     
     print(f'{"":#^100}')
